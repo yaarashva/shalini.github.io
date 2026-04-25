@@ -14,7 +14,7 @@ The static GitHub Pages form cannot write directly to Google Sheets by itself. S
 6. Commit and push again.
 
 The Apps Script is connected to spreadsheet ID:
-`1v21BddTCdfv3h7v9A7KBkLHeHOPwrZo-`
+`1XDA-0nUEzNWwNV-7dV0U_zTkIK9asg7h4Pu8sZdrCKQ`
 
 Submissions are appended to the existing tab:
 `Guest RSVP`

@@ -9,7 +9,7 @@
  * 5. Deploy -> New deployment -> Web app.
  */
 
-const SPREADSHEET_ID = '1v21BddTCdfv3h7v9A7KBkLHeHOPwrZo-';
+const SPREADSHEET_ID = '1XDA-0nUEzNWwNV-7dV0U_zTkIK9asg7h4Pu8sZdrCKQ';
 const RSVP_SHEET_NAME = 'Guest RSVP';
 
 const RSVP_HEADERS = [
