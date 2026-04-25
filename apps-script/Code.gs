@@ -142,21 +142,41 @@ const BRING_ITEMS = [
 ];
 
 function doGet(e) {
-  const action = e && e.parameter && e.parameter.action;
+  const params = (e && e.parameter) || {};
+  const action = params.action;
 
-  if (action === 'bringOptions') {
-    return jsonpResponse_(e.parameter.callback, getBringOptions());
+  try {
+    if (action === 'bringOptions') {
+      return jsonpResponse_(params.callback, getBringOptions());
+    }
+
+    if (action === 'submit') {
+      const payload = params.payload ? JSON.parse(params.payload) : {};
+      return jsonpResponse_(params.callback, submitRsvp(payload));
+    }
+
+    return HtmlService
+      .createHtmlOutputFromFile('Index')
+      .setTitle('Shalini Party RSVP')
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+  } catch (error) {
+    return jsonpResponse_(params.callback, {
+      ok: false,
+      message: error.message || String(error)
+    });
   }
-
-  return HtmlService
-    .createHtmlOutputFromFile('Index')
-    .setTitle('Shalini Party RSVP')
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
 
 function doPost(e) {
-  const payload = parsePostPayload_(e);
-  return jsonResponse_(submitRsvp(payload));
+  try {
+    const payload = parsePostPayload_(e);
+    return jsonResponse_(submitRsvp(payload));
+  } catch (error) {
+    return jsonResponse_({
+      ok: false,
+      message: error.message || String(error)
+    });
+  }
 }
 
 function getBringOptions() {

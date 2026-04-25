@@ -542,13 +542,9 @@
         const data = Object.fromEntries(new FormData(form).entries());
         data.bringItems = getSelectedBringItems();
 
-        fetch(APPS_SCRIPT_WEB_APP_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: new URLSearchParams({ payload: JSON.stringify(data) })
-        })
-          .then(() => {
-            setMessage('Thanks! Your RSVP was sent.', 'success');
+        submitViaJsonp(data)
+          .then(result => {
+            setMessage(result.message || 'Thanks! Your RSVP was saved.', 'success');
             const rememberedName = form.elements.name.value;
             form.reset();
             form.elements.name.value = rememberedName;
@@ -594,6 +590,49 @@
         };
         document.body.appendChild(script);
         script.addEventListener('load', () => script.remove());
+      }
+
+
+      function submitViaJsonp(data) {
+        return new Promise((resolve, reject) => {
+          const callbackName = `handleRsvpSubmit_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+          const script = document.createElement('script');
+          const timeoutId = window.setTimeout(() => {
+            cleanup();
+            reject(new Error('Timed out waiting for Apps Script. Please try again.'));
+          }, 15000);
+
+          window[callbackName] = result => {
+            cleanup();
+
+            if (result && result.ok === false) {
+              reject(new Error(result.message || 'Apps Script could not save the RSVP.'));
+              return;
+            }
+
+            resolve(result || { ok: true });
+          };
+
+          script.onerror = () => {
+            cleanup();
+            reject(new Error('Could not reach the Apps Script web app. Check deployment access and URL.'));
+          };
+
+          const separator = APPS_SCRIPT_WEB_APP_URL.includes('?') ? '&' : '?';
+          const params = new URLSearchParams({
+            action: 'submit',
+            callback: callbackName,
+            payload: JSON.stringify(data)
+          });
+          script.src = `${APPS_SCRIPT_WEB_APP_URL}${separator}${params.toString()}`;
+          document.body.appendChild(script);
+
+          function cleanup() {
+            window.clearTimeout(timeoutId);
+            delete window[callbackName];
+            script.remove();
+          }
+        });
       }
 
       function renderBringItems() {
