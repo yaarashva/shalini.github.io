@@ -10,8 +10,7 @@
  */
 
 const SPREADSHEET_ID = '1v21BddTCdfv3h7v9A7KBkLHeHOPwrZo-';
-const RSVP_SHEET_NAME = 'RSVP Responses';
-const BRING_SIGNUPS_SHEET_NAME = 'Bring Signups';
+const RSVP_SHEET_NAME = 'Guest RSVP';
 
 const RSVP_HEADERS = [
   'ID',
@@ -23,16 +22,6 @@ const RSVP_HEADERS = [
   'Bringing Details',
   'Ideas',
   'Status'
-];
-
-const BRING_SIGNUP_HEADERS = [
-  'Submission ID',
-  'Submitted At',
-  'Name',
-  'RSVP',
-  'Category',
-  'Item',
-  'Details'
 ];
 
 const BRING_ITEMS = [
@@ -171,10 +160,10 @@ function doPost(e) {
 }
 
 function getBringOptions() {
-  const bringSheet = getOrCreateSheet_(BRING_SIGNUPS_SHEET_NAME);
-  ensureHeaders_(bringSheet, BRING_SIGNUP_HEADERS);
+  const rsvpSheet = getOrCreateSheet_(RSVP_SHEET_NAME);
+  ensureHeaders_(rsvpSheet, RSVP_HEADERS);
 
-  const signupsByItem = getSignupsByItem_(bringSheet);
+  const signupsByItem = getSignupsByItem_(rsvpSheet);
 
   return BRING_ITEMS.map(item => {
     const signups = signupsByItem[item.label] || [];
@@ -212,10 +201,8 @@ function submitRsvp(formData) {
     );
     const id = createSubmissionId_();
     const rsvpSheet = getOrCreateSheet_(RSVP_SHEET_NAME);
-    const bringSheet = getOrCreateSheet_(BRING_SIGNUPS_SHEET_NAME);
 
     ensureHeaders_(rsvpSheet, RSVP_HEADERS);
-    ensureHeaders_(bringSheet, BRING_SIGNUP_HEADERS);
 
     const bringingItems = data.bringItems.map(item => item.label).join('; ');
     const bringingDetails = data.bringItems
@@ -236,23 +223,6 @@ function submitRsvp(formData) {
       data.ideas,
       'New'
     ]);
-
-    if (data.bringItems.length) {
-      const signupRows = data.bringItems.map(item => [
-        id,
-        submittedAt,
-        data.name,
-        data.rsvp,
-        item.category,
-        item.label,
-        item.details
-      ]);
-
-      bringSheet
-        .getRange(bringSheet.getLastRow() + 1, 1, signupRows.length, BRING_SIGNUP_HEADERS.length)
-        .setValues(signupRows);
-    }
-
     return {
       ok: true,
       id: id,
@@ -279,21 +249,31 @@ function getSpreadsheet_() {
 }
 
 function ensureHeaders_(sheet, headers) {
+  const lastColumn = Math.max(sheet.getLastColumn(), 1);
   const existingHeaders = sheet
-    .getRange(1, 1, 1, headers.length)
-    .getValues()[0];
+    .getRange(1, 1, 1, lastColumn)
+    .getValues()[0]
+    .map(cleanValue_);
 
-  const hasHeaders = existingHeaders.some(value => String(value).trim());
-
-  if (!hasHeaders) {
+  if (!existingHeaders.some(Boolean)) {
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    sheet.setFrozenRows(1);
-    sheet.getRange(1, 1, 1, headers.length)
-      .setFontWeight('bold')
-      .setBackground('#0f6f78')
-      .setFontColor('#ffffff');
-    sheet.autoResizeColumns(1, headers.length);
+  } else {
+    const missingHeaders = headers.filter(header => !existingHeaders.includes(header));
+
+    if (missingHeaders.length) {
+      sheet
+        .getRange(1, existingHeaders.length + 1, 1, missingHeaders.length)
+        .setValues([missingHeaders]);
+    }
   }
+
+  const styledColumnCount = Math.max(sheet.getLastColumn(), headers.length);
+  sheet.setFrozenRows(1);
+  sheet.getRange(1, 1, 1, styledColumnCount)
+    .setFontWeight('bold')
+    .setBackground('#0f6f78')
+    .setFontColor('#ffffff');
+  sheet.autoResizeColumns(1, styledColumnCount);
 }
 
 function getSignupsByItem_(sheet) {
@@ -303,31 +283,73 @@ function getSignupsByItem_(sheet) {
     return {};
   }
 
+  const headers = getHeaderMap_(sheet, RSVP_HEADERS);
   const rows = sheet
-    .getRange(2, 1, lastRow - 1, BRING_SIGNUP_HEADERS.length)
+    .getRange(2, 1, lastRow - 1, sheet.getLastColumn())
     .getValues();
 
   return rows.reduce((acc, row) => {
-    const name = cleanValue_(row[2]);
-    const rsvp = cleanValue_(row[3]);
-    const item = cleanValue_(row[5]);
-    const details = cleanValue_(row[6]);
+    const name = cleanValue_(row[headers.name]);
+    const rsvp = cleanValue_(row[headers.rsvp]);
+    const bringingItems = cleanValue_(row[headers.bringingItems]);
+    const bringingDetails = cleanValue_(row[headers.bringingDetails]);
 
-    if (!item || rsvp === 'No') {
+    if (!bringingItems || rsvp === 'No') {
       return acc;
     }
 
-    if (!acc[item]) {
-      acc[item] = [];
-    }
+    bringingItems.split(';').map(item => item.trim()).filter(Boolean).forEach(item => {
+      if (!acc[item]) {
+        acc[item] = [];
+      }
 
-    acc[item].push({
-      name: name || 'Someone',
-      details: details
+      acc[item].push({
+        name: name || 'Someone',
+        details: findItemDetails_(item, bringingDetails)
+      });
     });
 
     return acc;
   }, {});
+}
+
+function getHeaderMap_(sheet, headers) {
+  const values = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), headers.length)).getValues()[0];
+  const map = {};
+
+  values.forEach((header, index) => {
+    map[cleanValue_(header)] = index;
+  });
+
+  headers.forEach(header => {
+    if (map[header] === undefined) {
+      throw new Error(`Missing required column in ${RSVP_SHEET_NAME}: ${header}`);
+    }
+  });
+
+  return {
+    name: map['Name'],
+    rsvp: map['RSVP'],
+    bringingItems: map['Bringing Items'],
+    bringingDetails: map['Bringing Details']
+  };
+}
+
+function findItemDetails_(item, bringingDetails) {
+  if (!bringingDetails) {
+    return '';
+  }
+
+  const match = bringingDetails
+    .split('|')
+    .map(value => value.trim())
+    .find(value => value === item || value.startsWith(`${item} - `));
+
+  if (!match || match === item) {
+    return '';
+  }
+
+  return match.slice(item.length + 3).trim();
 }
 
 function normalizeRsvp_(formData) {
