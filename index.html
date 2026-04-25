@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shalini's WONDERful Farewell Party RSVP</title>
+    <style>
+      :root {
+        --ink: #fff8ed;
+        --muted: #d9d2ff;
+        --paper: #12051f;
+        --night: #090018;
+        --night-2: #170033;
+        --gold: #ffd044;
+        --hot-pink: #ff1493;
+        --magenta: #c01cff;
+        --teal: #16d6dd;
+        --coral: #ff4e5f;
+        --ring: rgba(255, 208, 68, 0.32);
+        --shadow: rgba(0, 0, 0, 0.42);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        background:
+          radial-gradient(circle at 9% 18%, rgba(255, 20, 147, 0.28) 0 95px, transparent 190px),
+          radial-gradient(circle at 91% 8%, rgba(255, 208, 68, 0.32) 0 90px, transparent 210px),
+          radial-gradient(circle at 80% 82%, rgba(22, 214, 221, 0.2) 0 120px, transparent 250px),
+          linear-gradient(145deg, #070010 0%, #190034 46%, #020716 100%);
+      }
+
+      .page {
+        width: min(980px, calc(100% - 28px));
+        margin: 0 auto;
+        padding: 18px 0;
+      }
+
+      .hero,
+      .card {
+        border: 1px solid rgba(255, 208, 68, 0.22);
+        border-radius: 30px;
+        box-shadow: 0 24px 70px var(--shadow), 0 0 34px rgba(255, 20, 147, 0.14);
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 16px;
+        padding: 16px 18px;
+        color: #fff;
+        background:
+          linear-gradient(135deg, rgba(255, 20, 147, 0.26), rgba(22, 214, 221, 0.15)),
+          linear-gradient(145deg, rgba(12, 0, 35, 0.98), rgba(41, 0, 71, 0.94));
+      }
+
+      .hero::before,
+      .hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        opacity: 0.24;
+      }
+
+      .hero::before {
+        width: 180px;
+        height: 180px;
+        right: -55px;
+        top: -65px;
+        background: var(--gold);
+        box-shadow: 0 0 46px rgba(255, 208, 68, 0.46);
+      }
+
+      .hero::after {
+        width: 240px;
+        height: 240px;
+        left: -110px;
+        bottom: -140px;
+        border: 24px solid var(--teal);
+        opacity: 0.16;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 136px minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: center;
+      }
+
+      .invite-art {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+      }
+
+      .invite-art img {
+        display: block;
+        width: 136px;
+        max-width: 100%;
+        border: 2px solid rgba(255, 208, 68, 0.72);
+        border-radius: 18px;
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.38), 0 0 24px rgba(255, 20, 147, 0.28);
+      }
+
+      .hero-text {
+        position: relative;
+        z-index: 1;
+      }
+
+      .eyebrow {
+        margin: 0 0 4px;
+        color: var(--teal);
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        color: var(--gold);
+        font-size: clamp(25px, 4.2vw, 42px);
+        line-height: 1;
+        text-shadow: 0 2px 0 rgba(255, 20, 147, 0.55), 0 0 18px rgba(255, 208, 68, 0.28);
+      }
+
+      .hero p {
+        margin: 5px 0 0;
+        max-width: 580px;
+        color: rgba(255, 248, 237, 0.9);
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .pill {
+        border: 1px solid rgba(255, 208, 68, 0.5);
+        border-radius: 999px;
+        padding: 7px 10px;
+        color: #fff;
+        background: rgba(255, 20, 147, 0.18);
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .card {
+        padding: 30px;
+        color: var(--ink);
+        background: linear-gradient(180deg, rgba(21, 4, 42, 0.96), rgba(10, 1, 22, 0.96));
+      }
+
+      .section-title {
+        margin: 0 0 8px;
+        color: var(--gold);
+        font-size: 30px;
+        text-shadow: 0 0 14px rgba(255, 208, 68, 0.22);
+      }
+
+      .intro {
+        margin: 0 0 24px;
+        color: var(--muted);
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      form {
+        display: grid;
+        gap: 22px;
+      }
+
+      .block {
+        display: grid;
+        gap: 16px;
+        border: 1px solid rgba(22, 214, 221, 0.24);
+        border-radius: 24px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      .block h3 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 22px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      label,
+      .field-label {
+        display: grid;
+        gap: 7px;
+        color: var(--muted);
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 2px solid transparent;
+        border-radius: 16px;
+        padding: 13px 14px;
+        color: #1b1030;
+        background: #fff8ed;
+        box-shadow: inset 0 0 0 1px rgba(255, 208, 68, 0.22);
+        font: 15px/1.4 Verdana, Geneva, sans-serif;
+        outline: none;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+      }
+
+      textarea {
+        min-height: 110px;
+        resize: vertical;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 5px var(--ring);
+      }
+
+      .items {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .bring-item {
+        display: grid;
+        gap: 10px;
+        border: 1px solid rgba(255, 208, 68, 0.2);
+        border-radius: 18px;
+        padding: 14px;
+        background: rgba(255, 255, 255, 0.09);
+      }
+
+      .bring-top {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        align-items: start;
+      }
+
+      .bring-top input {
+        width: 20px;
+        height: 20px;
+        margin-top: 2px;
+        accent-color: var(--hot-pink);
+      }
+
+      .bring-title {
+        color: #ffffff;
+        font: 700 14px/1.35 Verdana, Geneva, sans-serif;
+      }
+
+      .bring-note {
+        margin-top: 3px;
+        color: var(--muted);
+        font: 12px/1.35 Verdana, Geneva, sans-serif;
+      }
+
+      .bring-details {
+        display: none;
+      }
+
+      .bring-item.selected {
+        border-color: rgba(255, 20, 147, 0.72);
+        box-shadow: 0 0 0 4px rgba(255, 20, 147, 0.16);
+      }
+
+      .bring-item.selected .bring-details {
+        display: block;
+      }
+
+      .bring-status {
+        border-radius: 14px;
+        padding: 9px 10px;
+        color: #04181f;
+        background: #7df2f5;
+        font: 12px/1.4 Verdana, Geneva, sans-serif;
+      }
+
+      .bring-status.taken {
+        color: #190019;
+        background: #ffd044;
+      }
+
+      .bring-status strong {
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .loading-box {
+        grid-column: 1 / -1;
+        border-radius: 18px;
+        padding: 16px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.08);
+        font: 14px/1.45 Verdana, Geneva, sans-serif;
+      }
+
+      button {
+        width: 100%;
+        border: 0;
+        border-radius: 18px;
+        padding: 16px 18px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--hot-pink), var(--teal) 58%, var(--gold));
+        box-shadow: 0 16px 34px rgba(255, 20, 147, 0.28);
+        cursor: pointer;
+        font: 800 16px/1 Verdana, Geneva, sans-serif;
+        letter-spacing: 0.02em;
+        transition: opacity 150ms ease, transform 150ms ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.64;
+        transform: none;
+      }
+
+      .message {
+        display: none;
+        border-radius: 16px;
+        padding: 13px 14px;
+        font: 14px/1.45 Verdana, Geneva, sans-serif;
+      }
+
+      .message.show {
+        display: block;
+      }
+
+      .message.success {
+        color: #04181f;
+        background: #7df2f5;
+      }
+
+      .message.error {
+        color: #fff8ed;
+        background: rgba(255, 78, 95, 0.42);
+      }
+
+      .hint {
+        margin: 0;
+        color: var(--muted);
+        font: 12px/1.45 Verdana, Geneva, sans-serif;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          width: min(100% - 20px, 560px);
+          padding: 20px 0;
+        }
+
+        .hero-content {
+          grid-template-columns: 96px 1fr;
+          align-items: center;
+        }
+
+        .row,
+        .items {
+          grid-template-columns: 1fr;
+        }
+
+        .invite-art img {
+          width: 96px;
+          border-radius: 14px;
+        }
+
+        .pill {
+          display: none;
+          width: fit-content;
+          white-space: normal;
+        }
+
+        .card {
+          padding: 22px;
+          border-radius: 26px;
+        }
+
+        .hero {
+          padding: 12px 14px;
+          border-radius: 22px;
+        }
+
+        .hero p {
+          margin-top: 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="hero-content">
+          <figure class="invite-art" aria-label="Shalini's WONDERful Farewell Party invite">
+            <img src="assets/shalini-invite-preview.png" alt="Shalini's WONDERful Farewell Party invite">
+          </figure>
+          <div class="hero-text">
+            <p class="eyebrow">New Adventures Await</p>
+            <h1>Shalini's WONDERful Farewell Party</h1>
+            <p>Join us as we bid goodbye to someone truly wonderful. Let us know if you are coming and what you can bring.</p>
+          </div>
+          <div class="pill">Let's celebrate!</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">RSVP + Bring Something</h2>
+        <p class="intro">
+          Fill your name at the top, choose whether you are coming, then select
+          anything you can bring to help celebrate Shalini.
+        </p>
+
+        <form id="rsvpForm">
+          <section class="block">
+            <h3>Your RSVP</h3>
+            <div class="row">
+              <label>
+                Your name
+                <input name="name" type="text" maxlength="120" placeholder="Your name" required>
+              </label>
+
+              <label>
+                Are you coming?
+                <select name="rsvp" required>
+                  <option value="">Choose one</option>
+                  <option value="Yes">Yes, I/we are coming</option>
+                  <option value="Maybe">Maybe</option>
+                  <option value="No">No, I/we cannot make it</option>
+                </select>
+              </label>
+            </div>
+
+            <label>
+              Dietary restrictions / allergies
+              <input name="dietaryRestrictions" type="text" placeholder="Vegetarian, gluten-free, allergies, etc.">
+            </label>
+          </section>
+
+          <section class="block">
+            <h3>Ideas or notes</h3>
+            <label>
+              Simple idea box
+              <textarea name="ideas" placeholder="Menu ideas, activity ideas, questions, logistics notes, anything useful."></textarea>
+            </label>
+          </section>
+
+          <section class="block">
+            <h3>What can you bring?</h3>
+            <p class="hint">
+              This list shows what is already covered. You can still select an
+              item if bringing more would help.
+            </p>
+            <div id="items" class="items">
+              <div class="loading-box">Loading what people already signed up to bring...</div>
+            </div>
+          </section>
+
+          <button id="submitButton" type="submit">Save RSVP to spreadsheet</button>
+          <div id="message" class="message" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      // Paste your deployed Google Apps Script web app URL here after deploying apps-script/Code.gs.
+      // It should look like: https://script.google.com/macros/s/AKfycb.../exec
+      const APPS_SCRIPT_WEB_APP_URL = '';
+
+      const FALLBACK_BRING_ITEMS = [
+        { id: 'grill_mains', category: 'Food', label: 'Grill mains: burgers / hot dogs / skewers', note: 'Coordinate quantities with the food lead first.', signupCount: 0, signups: [] },
+        { id: 'vegetarian_grill', category: 'Food', label: 'Vegetarian / vegan grill option', note: 'Veggie burgers, grilled vegetables, halloumi, etc.', signupCount: 0, signups: [] },
+        { id: 'bread', category: 'Food', label: 'Buns / pita / rolls', note: 'Match to the final BBQ menu.', signupCount: 0, signups: [] },
+        { id: 'salad', category: 'Food', label: 'Salad', note: 'Green salad, pasta salad, Israeli salad, fruit salad, etc.', signupCount: 0, signups: [] },
+        { id: 'snacks', category: 'Food', label: 'Snacks, chips, dips, or fruit', note: 'Easy arrival food for the table.', signupCount: 0, signups: [] },
+        { id: 'dessert', category: 'Food', label: 'Dessert or cake', note: 'Confirm if there will be one main cake.', signupCount: 0, signups: [] },
+        { id: 'condiments', category: 'Food', label: 'Condiments and toppings', note: 'Ketchup, mustard, mayo, pickles, sauces, etc.', signupCount: 0, signups: [] },
+        { id: 'water', category: 'Drinks', label: 'Water / sparkling water', note: 'Plan generously if it is hot outside.', signupCount: 0, signups: [] },
+        { id: 'soft_drinks', category: 'Drinks', label: 'Soft drinks / juice', note: 'Especially useful if kids are invited.', signupCount: 0, signups: [] },
+        { id: 'alcohol', category: 'Drinks', label: 'Alcohol', note: 'Only if condo rules allow it.', signupCount: 0, signups: [] },
+        { id: 'ice', category: 'Drinks', label: 'Ice', note: 'For drinks and coolers.', signupCount: 0, signups: [] },
+        { id: 'cooler', category: 'Supplies', label: 'Cooler / ice packs', note: 'Useful for keeping food and drinks cold.', signupCount: 0, signups: [] },
+        { id: 'disposable_supplies', category: 'Supplies', label: 'Plates, cups, napkins, or cutlery', note: 'Add how many you can bring.', signupCount: 0, signups: [] },
+        { id: 'serving_supplies', category: 'Supplies', label: 'Serving bowls, trays, or utensils', note: 'Great for salads, snacks, and BBQ serving.', signupCount: 0, signups: [] },
+        { id: 'cleanup_supplies', category: 'Supplies', label: 'Trash bags, wipes, paper towels, or sanitizer', note: 'Cleanup goblin supplies. Quietly heroic.', signupCount: 0, signups: [] },
+        { id: 'decor', category: 'Vibe', label: 'Decor: tablecloths, lights, signs, flowers', note: 'Keep condo rules in mind.', signupCount: 0, signups: [] },
+        { id: 'speaker_playlist', category: 'Vibe', label: 'Speaker or playlist', note: 'Charge and test before the party.', signupCount: 0, signups: [] },
+        { id: 'first_aid', category: 'Safety', label: 'First aid kit', note: 'Especially helpful if kids or pool time are involved.', signupCount: 0, signups: [] },
+        { id: 'other', category: 'Other', label: 'Something else', note: 'Add details below.', signupCount: 0, signups: [] }
+      ];
+
+      let bringItems = [];
+      const form = document.querySelector('#rsvpForm');
+      const button = document.querySelector('#submitButton');
+      const message = document.querySelector('#message');
+      const itemsContainer = document.querySelector('#items');
+
+      window.handleBringOptions = items => {
+        bringItems = Array.isArray(items) && items.length ? items : FALLBACK_BRING_ITEMS;
+        renderBringItems();
+      };
+
+      loadBringItems();
+
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        setMessage('', '');
+        button.disabled = true;
+        button.textContent = 'Saving...';
+
+        if (!isConfigured()) {
+          setMessage('This page still needs the deployed Apps Script web app URL in index.html before it can save.', 'error');
+          button.disabled = false;
+          button.textContent = 'Save RSVP to spreadsheet';
+          return;
+        }
+
+        const data = Object.fromEntries(new FormData(form).entries());
+        data.bringItems = getSelectedBringItems();
+
+        fetch(APPS_SCRIPT_WEB_APP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: new URLSearchParams({ payload: JSON.stringify(data) })
+        })
+          .then(() => {
+            setMessage('Thanks! Your RSVP was sent.', 'success');
+            const rememberedName = form.elements.name.value;
+            form.reset();
+            form.elements.name.value = rememberedName;
+            setTimeout(loadBringItems, 1200);
+          })
+          .catch(error => {
+            setMessage(error.message || 'Something went wrong. Please try again.', 'error');
+          })
+          .finally(() => {
+            button.disabled = false;
+            button.textContent = 'Save RSVP to spreadsheet';
+          });
+      });
+
+      function isConfigured() {
+        return APPS_SCRIPT_WEB_APP_URL && APPS_SCRIPT_WEB_APP_URL.startsWith('https://script.google.com/');
+      }
+
+      function loadBringItems() {
+        itemsContainer.innerHTML = '<div class="loading-box">Loading what people already signed up to bring...</div>';
+
+        if (!isConfigured()) {
+          bringItems = FALLBACK_BRING_ITEMS;
+          renderBringItems();
+          setMessage('Setup note: deploy apps-script/Code.gs, then paste the web app URL into index.html.', 'error');
+          return;
+        }
+
+        const callbackName = `handleBringOptions_${Date.now()}`;
+        window[callbackName] = items => {
+          window.handleBringOptions(items);
+          delete window[callbackName];
+        };
+
+        const script = document.createElement('script');
+        const separator = APPS_SCRIPT_WEB_APP_URL.includes('?') ? '&' : '?';
+        script.src = `${APPS_SCRIPT_WEB_APP_URL}${separator}action=bringOptions&callback=${callbackName}`;
+        script.onerror = () => {
+          bringItems = FALLBACK_BRING_ITEMS;
+          renderBringItems();
+          setMessage('Could not load existing signups, so showing the default list.', 'error');
+          delete window[callbackName];
+        };
+        document.body.appendChild(script);
+        script.addEventListener('load', () => script.remove());
+      }
+
+      function renderBringItems() {
+        itemsContainer.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+
+        bringItems.forEach(item => {
+          const card = document.createElement('label');
+          card.className = 'bring-item';
+          card.dataset.itemId = item.id;
+
+          const top = document.createElement('div');
+          top.className = 'bring-top';
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.name = 'bringItem';
+          checkbox.value = item.id;
+          checkbox.addEventListener('change', () => {
+            card.classList.toggle('selected', checkbox.checked);
+          });
+
+          const copy = document.createElement('div');
+          const title = document.createElement('div');
+          title.className = 'bring-title';
+          title.textContent = `${item.category}: ${item.label}`;
+
+          const note = document.createElement('div');
+          note.className = 'bring-note';
+          note.textContent = item.note;
+
+          const status = document.createElement('div');
+          const signups = Array.isArray(item.signups) ? item.signups : [];
+          status.className = signups.length ? 'bring-status taken' : 'bring-status';
+          status.innerHTML = signups.length
+            ? `<strong>Already covered by:</strong>${formatSignups(signups)}`
+            : '<strong>Still open</strong>No one has signed up for this yet.';
+
+          copy.append(title, note);
+          top.append(checkbox, copy);
+
+          const details = document.createElement('input');
+          details.className = 'bring-details';
+          details.name = `details_${item.id}`;
+          details.type = 'text';
+          details.placeholder = 'Quantity/details, optional';
+
+          card.append(top, status, details);
+          fragment.append(card);
+        });
+
+        itemsContainer.append(fragment);
+      }
+
+      function getSelectedBringItems() {
+        return Array.from(document.querySelectorAll('input[name="bringItem"]:checked'))
+          .map(checkbox => {
+            const item = bringItems.find(candidate => candidate.id === checkbox.value);
+            const details = form.elements[`details_${checkbox.value}`].value || '';
+
+            return {
+              id: item.id,
+              category: item.category,
+              label: item.label,
+              details: details
+            };
+          });
+      }
+
+      function formatSignups(signups) {
+        return signups
+          .map(signup => {
+            const details = signup.details ? ` (${escapeHtml(signup.details)})` : '';
+            return `${escapeHtml(signup.name)}${details}`;
+          })
+          .join(', ');
+      }
+
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function setMessage(text, type) {
+        message.textContent = text;
+        message.className = type ? `message ${type} show` : 'message';
+      }
+    </script>
+  </body>
+</html>
